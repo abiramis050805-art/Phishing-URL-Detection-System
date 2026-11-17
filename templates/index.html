@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phishing URL Detection System</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #101827;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: #1e293b;
+            padding: 40px;
+            width: 100%;
+            max-width: 550px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .icon {
+            font-size: 55px;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 27px;
+            margin-bottom: 12px;
+            color: #38bdf8;
+        }
+
+        .description {
+            color: #cbd5e1;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #475569;
+            border-radius: 8px;
+            background: #0f172a;
+            color: white;
+            font-size: 15px;
+            margin-bottom: 18px;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: #0284c7;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0369a1;
+        }
+
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .phishing {
+            background: #7f1d1d;
+            border: 1px solid #ef4444;
+        }
+
+        .legitimate {
+            background: #14532d;
+            border: 1px solid #22c55e;
+        }
+
+        .result h2 {
+            margin-bottom: 10px;
+        }
+
+        .note {
+            margin-top: 25px;
+            font-size: 12px;
+            color: #94a3b8;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="icon">🛡️</div>
+
+        <h1>Phishing URL Detection System</h1>
+
+        <p class="description">
+            Protect yourself from suspicious websites.
+            Enter a URL below to check its predicted category
+            using Machine Learning.
+        </p>
+
+        <form method="POST">
+
+            <input
+                type="text"
+                name="url"
+                placeholder="Enter website URL..."
+                value="{{ entered_url }}"
+                required
+            >
+
+            <button type="submit">
+                Scan URL
+            </button>
+
+        </form>
+
+        {% if error %}
+
+            <div class="result phishing">
+                <h2>Invalid URL</h2>
+                <p>{{ error }}</p>
+            </div>
+
+        {% endif %}
+
+        {% if result %}
+
+            <div class="result {{ 'phishing' if result == 'PHISHING' else 'legitimate' }}">
+
+                <h2>{{ result }}</h2>
+
+                <p>
+                    Model confidence: {{ probability }}%
+                </p>
+
+            </div>
+        
+        {% if feature_details %}
+
+            <div class="result" style="background: #0f172a; border: 1px solid #475569;">
+
+                <h2 style="color: #38bdf8; margin-bottom: 15px;">
+                    Extracted URL Features
+                </h2>
+
+                {% for feature, value in feature_details.items() %}
+
+                    <div style="
+                        display: flex;
+                        justify-content: space-between;
+                        padding: 10px;
+                        border-bottom: 1px solid #334155;
+                        text-align: left;
+                    ">
+
+                        <span style="color: #cbd5e1;">
+                            {{ feature }}
+                        </span>
+
+                        <strong style="color: white;">
+                            {{ value }}
+                        </strong>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+        {% endif %}
+
+        <p class="note">
+            This system uses a Random Forest machine learning model.
+            Predictions are not a guarantee of website safety.
+        </p>
+
+    </div>
+
+</body>
+</html>
